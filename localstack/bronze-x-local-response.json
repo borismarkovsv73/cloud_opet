@@ -1,1 +1,1 @@
-{"statusCode": 200, "body": "{\"bucket\": \"social-bronze-local\", \"prefix\": \"bronze/x\", \"mode\": \"generated\", \"object\": \"bronze/x/source=generated/ingest_date=2026-05-29/sample.jsonl\"}"}
+{"statusCode": 200, "body": "{\"bucket\": \"social-bronze-local\", \"prefix\": \"bronze/x\", \"mode\": \"generated\", \"object\": \"bronze/x/source=generated/ingest_date=2026-05-30/sample.jsonl\"}"}

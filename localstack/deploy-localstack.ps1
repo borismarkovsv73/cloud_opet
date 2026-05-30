@@ -18,10 +18,19 @@ function Invoke-AwsCli {
     [string[]]$Arguments
   )
 
+  $awsCommand = Get-Command aws -ErrorAction SilentlyContinue
+  if (-not $awsCommand) {
+    $awsCommand = Get-Command aws.exe -ErrorAction SilentlyContinue
+  }
+
+  if (-not $awsCommand) {
+    throw "AWS CLI not found. Install the AWS CLI and make sure 'aws' is available on PATH before running this script."
+  }
+
   $stdoutFile = Join-Path $env:TEMP "aws-stdout-$([guid]::NewGuid().ToString()).txt"
   $stderrFile = Join-Path $env:TEMP "aws-stderr-$([guid]::NewGuid().ToString()).txt"
 
-  $process = Start-Process -FilePath "aws.exe" -ArgumentList $Arguments -NoNewWindow -Wait -PassThru -RedirectStandardOutput $stdoutFile -RedirectStandardError $stderrFile
+  $process = Start-Process -FilePath $awsCommand.Source -ArgumentList $Arguments -NoNewWindow -Wait -PassThru -RedirectStandardOutput $stdoutFile -RedirectStandardError $stderrFile
   $output = if (Test-Path $stdoutFile) { Get-Content $stdoutFile -Raw } else { "" }
   $errorOutput = if (Test-Path $stderrFile) { Get-Content $stderrFile -Raw } else { "" }
 
