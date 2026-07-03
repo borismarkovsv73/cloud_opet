@@ -35,8 +35,6 @@ See [gold/README.md](gold/README.md) for the architecture, schema, and dashboard
 
 ## Run locally
 
-Make sure Python 3.12 and pip are available on your machine. The deploy script packages the Silver and Gold Lambda dependencies automatically.
-
 ```powershell
 docker compose -f docker-compose.localstack.yml up -d
 .\localstack\deploy-localstack.ps1
@@ -49,8 +47,6 @@ aws --endpoint-url=http://localhost:4566 s3 ls s3://social-bronze-local --recurs
 aws --endpoint-url=http://localhost:4566 s3 ls s3://social-silver-local --recursive
 aws --endpoint-url=http://localhost:4566 s3 ls s3://social-gold-local --recursive
 ```
-
-The compose file now starts a local PostgreSQL container alongside LocalStack so you can verify the Gold sync step end to end.
 
 ## View the dashboard locally
 
@@ -85,8 +81,6 @@ terraform init
 terraform plan -var-file=example.tfvars -out=tfplan
 terraform apply tfplan
 ```
-
-The packaging script builds the Lambda zip files with their Python dependencies included, so you do not need any layer ARNs.
 
 
 
