@@ -75,7 +75,30 @@ Add a PostgreSQL database connection with:
 
 After that, create datasets from the Gold fact tables and build charts from [gold/README.md](gold/README.md).
 
-## Deploy to AWS
+## View the dashboard on AWS cheaply
+
+If you want the real AWS data, the cheapest practical option in this repo is the small Superset service created by Terraform.
+
+After `terraform apply`, use the outputs for:
+
+- `superset_url`
+- `superset_admin_password`
+- `gold_postgres_endpoint`
+
+Open the Superset URL in your browser and sign in with:
+
+- Username: `admin`
+- Password: the value from `superset_admin_password`
+
+Then add a PostgreSQL database connection with:
+
+- Host: the `gold_postgres_endpoint` output
+- Port: `5432`
+- Database: `gold`
+- Username: `gold_app`
+- Password: the Gold password stored in Secrets Manager
+
+## Deployment
 
 ```powershell
 cd h:\Fakultet\Cloud
@@ -84,9 +107,6 @@ cd infra\terraform
 terraform init
 terraform plan -var-file=example.tfvars -out=tfplan
 terraform apply tfplan
-```
-
-The packaging script builds the Lambda zip files with their Python dependencies included, so you do not need any layer ARNs.
 
 
 

@@ -21,7 +21,7 @@ resource "aws_db_subnet_group" "gold" {
 resource "aws_security_group" "gold_postgres" {
   count       = var.gold_manage_postgres ? 1 : 0
   name        = "${var.project_name}-gold-postgres-sg"
-  description = "Allow PostgreSQL from Lambda security group only"
+  description = "Allow PostgreSQL from Lambda and Superset security groups"
   vpc_id      = aws_vpc.bronze.id
 
   ingress {
@@ -29,6 +29,13 @@ resource "aws_security_group" "gold_postgres" {
     to_port         = 5432
     protocol        = "tcp"
     security_groups = [aws_security_group.lambda.id]
+  }
+
+  ingress {
+    from_port       = 5432
+    to_port         = 5432
+    protocol        = "tcp"
+    security_groups = [aws_security_group.superset_task.id]
   }
 
   tags = merge(local.gold_tags, { Name = "${var.project_name}-gold-postgres-sg" })
