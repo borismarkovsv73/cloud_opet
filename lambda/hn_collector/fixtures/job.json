@@ -1,0 +1,15 @@
+{
+  "hits": [
+    {
+      "objectID": "hn-job-1",
+      "author": "employer",
+      "created_at": "2026-07-01T09:00:00Z",
+      "created_at_i": 1782896400,
+      "title": "Hiring: local data engineer",
+      "story_text": "<p>We are hiring for an offline data platform.</p>",
+      "url": "https://example.com/job-1",
+      "points": 4,
+      "num_comments": 0
+    }
+  ]
+}

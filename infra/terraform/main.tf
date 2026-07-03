@@ -3,9 +3,6 @@ provider "aws" {
 }
 
 data "aws_caller_identity" "current" {}
-data "aws_availability_zones" "available" {
-  state = "available"
-}
 
 locals {
   tags = {
@@ -14,13 +11,15 @@ locals {
     Layer     = "Bronze"
   }
 
-  bucket_name      = lower(replace("${var.project_name}-${data.aws_caller_identity.current.account_id}-${var.region}", "_", "-"))
-  hn_prefix        = "bronze/hackernews"
-  x_prefix         = "bronze/x"
-  hn_function_name = "${var.project_name}-hn-collector"
-  x_function_name  = "${var.project_name}-x-collector"
-  hn_zip_path      = "${path.module}/.build/hn_collector.zip"
-  x_zip_path       = "${path.module}/.build/x_collector.zip"
+  primary_availability_zone   = "${var.region}${var.availability_zone_suffix}"
+  secondary_availability_zone = "${var.region}${var.availability_zone_suffix_2}"
+  bucket_name                 = lower(replace("${var.project_name}-${data.aws_caller_identity.current.account_id}-${var.region}", "_", "-"))
+  hn_prefix                   = "bronze/hackernews"
+  x_prefix                    = "bronze/x"
+  hn_function_name            = "${var.project_name}-hn-collector"
+  x_function_name             = "${var.project_name}-x-collector"
+  hn_zip_path                 = "${path.module}/.build/hn_collector.zip"
+  x_zip_path                  = "${path.module}/.build/x_collector.zip"
 }
 
 resource "aws_s3_bucket" "bronze" {
@@ -87,7 +86,7 @@ resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.bronze.id
   cidr_block              = var.public_subnet_cidr
   map_public_ip_on_launch = true
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  availability_zone       = local.primary_availability_zone
   tags                    = merge(local.tags, { Name = "${var.project_name}-public-a" })
 }
 
@@ -95,8 +94,16 @@ resource "aws_subnet" "private" {
   vpc_id                  = aws_vpc.bronze.id
   cidr_block              = var.private_subnet_cidr
   map_public_ip_on_launch = false
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  availability_zone       = local.primary_availability_zone
   tags                    = merge(local.tags, { Name = "${var.project_name}-private-a" })
+}
+
+resource "aws_subnet" "private_2" {
+  vpc_id                  = aws_vpc.bronze.id
+  cidr_block              = var.private_subnet_2_cidr
+  map_public_ip_on_launch = false
+  availability_zone       = local.secondary_availability_zone
+  tags                    = merge(local.tags, { Name = "${var.project_name}-private-b" })
 }
 
 resource "aws_route_table" "public" {
@@ -140,6 +147,11 @@ resource "aws_route" "private_default" {
 
 resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_2" {
+  subnet_id      = aws_subnet.private_2.id
   route_table_id = aws_route_table.private.id
 }
 
@@ -205,7 +217,7 @@ data "aws_iam_policy_document" "shared_lambda_runtime" {
   }
 
   statement {
-    sid     = "ManageVpcNetworking"
+    sid = "ManageVpcNetworking"
     actions = [
       "ec2:CreateNetworkInterface",
       "ec2:DescribeNetworkInterfaces",
@@ -297,7 +309,7 @@ data "aws_iam_policy_document" "bronze_bucket" {
       identifiers = [aws_iam_role.hn_lambda.arn]
     }
 
-    actions = ["s3:PutObject"]
+    actions   = ["s3:PutObject"]
     resources = ["${aws_s3_bucket.bronze.arn}/${local.hn_prefix}/*"]
 
     condition {
@@ -316,7 +328,7 @@ data "aws_iam_policy_document" "bronze_bucket" {
       identifiers = [aws_iam_role.x_lambda.arn]
     }
 
-    actions = ["s3:PutObject"]
+    actions   = ["s3:PutObject"]
     resources = ["${aws_s3_bucket.bronze.arn}/${local.x_prefix}/*"]
 
     condition {

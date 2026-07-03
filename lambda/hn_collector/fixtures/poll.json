@@ -1,0 +1,15 @@
+{
+  "hits": [
+    {
+      "objectID": "hn-poll-1",
+      "author": "frank",
+      "created_at": "2026-07-01T16:45:00Z",
+      "created_at_i": 1782924300,
+      "title": "Poll: best storage format?",
+      "story_text": "<p>Parquet or JSON?</p>",
+      "parts": [201, 202],
+      "points": 15,
+      "num_comments": 4
+    }
+  ]
+}

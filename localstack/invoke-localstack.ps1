@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("hn", "x")]
+    [ValidateSet("hn", "x", "silver", "gold", "goldsync")]
     [string]$Function,
     [string]$EndpointUrl = "http://localhost:4566",
     [string]$Region = "us-east-1"
@@ -15,7 +15,13 @@ if (-not $awsCommand) {
     throw "AWS CLI not found. Install the AWS CLI and make sure 'aws' is available on PATH before running this script."
 }
 
-$functionName = if ($Function -eq "hn") { "bronze-hn-local" } else { "bronze-x-local" }
+$functionName = switch ($Function) {
+    "hn" { "bronze-hn-local" }
+    "x" { "bronze-x-local" }
+    "silver" { "silver-normalizer-local" }
+    "gold" { "gold-metrics-local" }
+    "goldsync" { "gold-sync-local" }
+}
 $outputFile = Join-Path $PSScriptRoot "$functionName-response.json"
 
 # Ensure a region is set for the AWS CLI to avoid NoRegion errors

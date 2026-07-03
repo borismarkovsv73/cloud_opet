@@ -10,6 +10,18 @@ variable "project_name" {
   default     = "social-bronze"
 }
 
+variable "availability_zone_suffix" {
+  description = "Availability zone suffix to use for the VPC subnets."
+  type        = string
+  default     = "a"
+}
+
+variable "availability_zone_suffix_2" {
+  description = "Second availability zone suffix for the RDS subnet group."
+  type        = string
+  default     = "b"
+}
+
 variable "vpc_cidr" {
   description = "CIDR block for the VPC."
   type        = string
@@ -26,6 +38,12 @@ variable "private_subnet_cidr" {
   description = "CIDR block for the private subnet."
   type        = string
   default     = "10.40.1.0/24"
+}
+
+variable "private_subnet_2_cidr" {
+  description = "CIDR block for the second private subnet."
+  type        = string
+  default     = "10.40.2.0/24"
 }
 
 variable "hn_cron_expression" {

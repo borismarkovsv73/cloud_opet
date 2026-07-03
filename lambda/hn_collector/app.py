@@ -31,6 +31,15 @@ def put_raw_object(bucket: str, key: str, payload: bytes):
     )
 
 
+def read_fixture_bytes(fixture_dir: str, source_name: str):
+    fixture_path = os.path.join(fixture_dir, f"{source_name}.json")
+    if not os.path.isfile(fixture_path):
+        return None
+
+    with open(fixture_path, "rb") as fixture_file:
+        return fixture_file.read()
+
+
 def previous_day_window(now_utc: datetime):
     day_start = datetime(now_utc.year, now_utc.month, now_utc.day, tzinfo=timezone.utc) - timedelta(days=1)
     day_end = day_start + timedelta(days=1)
@@ -42,6 +51,16 @@ def collect_source_pages(bucket: str, prefix: str, source_name: str, algolia_tag
     Pull pages from hn.algolia.com using search_by_date, restricted to the previous UTC day.
     The raw page response is stored unchanged in S3.
     """
+    fixture_dir = os.environ.get("HN_FIXTURE_DIR")
+    if fixture_dir:
+        fixture_bytes = read_fixture_bytes(fixture_dir, source_name)
+        if fixture_bytes is not None:
+            data = json.loads(fixture_bytes)
+            hits = data.get("hits", [])
+            key = f"{prefix}/raw/algolia_source={source_name}/ingest_date={day_start.date().isoformat()}/page=0.json"
+            put_raw_object(bucket, key, fixture_bytes)
+            return len(hits)
+
     page = 0
     ingested = 0
 

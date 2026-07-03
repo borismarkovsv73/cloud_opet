@@ -4,6 +4,11 @@
 *.tfstate
 *.tfstate.*
 terraform.tfvars
+.postgres/
+addresses.txt
+infra/terraform/tfplan
+infra/terraform/*.json
+localstack/*-response.json
 __pycache__/
 *.pyc
 *.zip

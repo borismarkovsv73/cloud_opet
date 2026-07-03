@@ -1,0 +1,27 @@
+{
+  "hits": [
+    {
+      "objectID": "hn-story-1",
+      "author": "alice",
+      "created_at": "2026-07-01T12:00:00Z",
+      "created_at_i": 1782907200,
+      "title": "First local story",
+      "story_text": "<p>Story body</p>",
+      "url": "https://example.com/story-1",
+      "points": 12,
+      "num_comments": 3,
+      "kids": [101, 102]
+    },
+    {
+      "objectID": "hn-story-2",
+      "author": "bob",
+      "created_at": "2026-07-01T14:00:00Z",
+      "created_at_i": 1782914400,
+      "title": "Second local story",
+      "story_text": "<p>Another story</p>",
+      "url": "https://example.com/story-2",
+      "points": 7,
+      "num_comments": 1
+    }
+  ]
+}

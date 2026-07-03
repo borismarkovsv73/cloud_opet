@@ -1,0 +1,14 @@
+{
+  "hits": [
+    {
+      "objectID": "hn-ask-1",
+      "author": "carol",
+      "created_at": "2026-07-01T10:30:00Z",
+      "created_at_i": 1782901800,
+      "title": "Ask HN: local question",
+      "story_text": "<p>What do you think about offline testing?</p>",
+      "points": 9,
+      "num_comments": 2
+    }
+  ]
+}

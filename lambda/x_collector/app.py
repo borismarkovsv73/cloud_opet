@@ -45,6 +45,7 @@ def generated_raw_dataset():
             "id": "x-gen-001",
             "created_at": now,
             "author_id": "sample-user-01",
+            "followers_count": 128,
             "text": "Generated raw social post for Bronze bootstrap",
             "lang": "en",
             "public_metrics": {
@@ -58,6 +59,7 @@ def generated_raw_dataset():
             "id": "x-gen-002",
             "created_at": now,
             "author_id": "sample-user-02",
+            "followers_count": 87,
             "text": "Second generated Bronze record for the X source",
             "lang": "en",
             "public_metrics": {

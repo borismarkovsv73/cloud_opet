@@ -17,3 +17,8 @@ output "x_lambda_name" {
   value       = aws_lambda_function.x_collector.function_name
   description = "X collector Lambda name."
 }
+
+output "lambda_security_group_id" {
+  value       = aws_security_group.lambda.id
+  description = "Security group shared by the VPC Lambdas."
+}
